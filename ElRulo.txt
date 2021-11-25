@@ -1,0 +1,57 @@
+
+$( document ).ready(function()
+{ 
+	 $('#enviar').click(function()
+     {   
+        frenarMensaje();
+        var tagNombre="#nombre_";
+        if(!validarNombre())
+        {
+        	mensajeError(tagNombre,"Nombre no valido");
+        }
+        else if(!validarCelular())
+        {
+        	mensajeError("#celular_","Celular no valido");
+        }
+        else
+        {
+            /*ajax insertar*/
+            $.ajax({   
+                    url: 'http://localhost/Sopnet-wpValidation/val/Php/en.php', //action  
+                    type: 'post',
+                    datatype: 'json',
+                data:{ 
+                    nombre_:  $('#nombre').val(),
+                    celular_: cel,
+                }
+                }).done( 
+                function(respuesta){
+                    respuesta = JSON.parse(respuesta);
+                   // console.log(JSON.stringify(respuesta));
+                    $('#error-general').html( respuesta['mensaje']);
+                    //console.log( JSON.parse(respuesta)); 
+                    console.log(respuesta['mensaje']);
+                    console.log(respuesta.mensaje);
+                }
+                )
+                .fail(function (jqXHR, textStatus, errorThrown) { 
+                    alert("" + jqXHR + textStatus +errorThrown);
+                })
+            });
+        }    
+     }
+
+     function mensajeError(nom, error)
+    {
+ 		$(nom).html( error);
+    }
+    function mensajeError(error)
+    {
+        ('#error-general').html( error);
+    }
+
+    function frenarMensaje()
+    { 
+         event.preventDefault(); //break
+    }
+}
